@@ -1,7 +1,6 @@
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
-[Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
 
@@ -28,6 +27,9 @@ ExportedObj/
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
+
+*.rar
+*.zip
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
