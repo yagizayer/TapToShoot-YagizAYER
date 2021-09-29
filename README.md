@@ -1,6 +1,6 @@
 # Tap To Shoot Game
 ### Platform and Engine
- - **Platform :** WebGL
+ - **Platform :** WebGL & Android(4.0+)
  - **Engine :** Unity 2020.3.12f1
  - **Architecture:** EDP (Event Driven Program)
 ### About Developer
