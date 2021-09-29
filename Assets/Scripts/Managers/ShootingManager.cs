@@ -15,6 +15,7 @@ public class ShootingManager : MonoBehaviour
 
 
     public float GrenadeRange => _grenadeRange;
+    public float GrenadeForce => _grenadeForce;
     public List<GameObject> LastTargets => _lastTargets;
     [HideInInspector]
     public bool AbleToShoot = true;
@@ -52,8 +53,13 @@ public class ShootingManager : MonoBehaviour
     {
         GameObject projectile = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         projectile.transform.position = _camera.transform.position;
-        Projectile projectileMeta = projectile.AddComponent<Projectile>();
-        projectileMeta._myMode = _shootingMode;
+        ProjectileComp projectileMeta = projectile.AddComponent<ProjectileComp>();
+
+        if (_shootingMode == ProjectileMode.Pistol)
+            projectileMeta._myProjectile = new Pistol(_gameManager.ShootableTag, _camera.transform.position);
+        if (_shootingMode == ProjectileMode.Grenade)
+            projectileMeta._myProjectile = new Grenade(_gameManager.ShootableTag, GrenadeRange, GrenadeForce);
+
         Rigidbody projectileRB = projectile.AddComponent<Rigidbody>();
         projectileRB.collisionDetectionMode = CollisionDetectionMode.Continuous;
         projectileRB.mass = .01f;
@@ -77,31 +83,7 @@ public class ShootingManager : MonoBehaviour
 
     public void ExecuteShot(GameObject projectile, GameObject other)
     {
-        _lastTargets = new List<GameObject>();
-        if (_shootingMode == ProjectileMode.Pistol)
-        {
-            if (other.GetComponent<Rigidbody>() == null)
-                _lastTargets.Add(other);
-            Rigidbody tempRB = other.GetComponent<Rigidbody>();
-            if (tempRB == null) tempRB = other.AddComponent<Rigidbody>();
-            tempRB.AddForce((other.transform.position - _camera.transform.position).normalized, ForceMode.VelocityChange);
-        }
-        if (_shootingMode == ProjectileMode.Grenade)
-        {
-            Vector3 explosionCenter = Vector3.Lerp(projectile.transform.position, other.transform.position, .5f);
-            Collider[] targets = Physics.OverlapSphere(explosionCenter, GrenadeRange);
-            foreach (Collider cube in targets)
-            {
-                if (!cube.gameObject.CompareTag(_gameManager.ShootableTag)) continue;
-                Rigidbody cubeRB = cube.GetComponent<Rigidbody>();
-                if (cubeRB == null)
-                {
-                    _lastTargets.Add(cube.gameObject);
-                    cubeRB = cube.gameObject.AddComponent<Rigidbody>();
-                }
-                cubeRB.AddExplosionForce(_grenadeForce * 100, explosionCenter, GrenadeRange);
-            }
-        }
+        _lastTargets = projectile.GetComponent<ProjectileComp>()._myProjectile.Execute(projectile, other);
     }
 
     public void ChangeShootableState(bool newState)
