@@ -18,6 +18,6 @@ Player can change this values via GameManagement Objects scripts.</br>
 ![Image-3](/ReadmeResources/CaseResource_01.png)</br>
 
 ## Technology Details
-Used technologies in this project are :
+Used technologies in this project are :</br>
 Event Driven Programming (EDP) : </br>
 ![Image-4](/ReadmeResources/CaseResource_04.png)</br>
